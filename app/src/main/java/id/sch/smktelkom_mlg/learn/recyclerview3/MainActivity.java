@@ -23,8 +23,10 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
 
     public static final String HOTEL = "hotel";
     private static final int REQUEST_CODE_ADD = 88;
+    private static final int REQUEST_CODE_EDIT = 99;
     ArrayList<Hotel> mlist = new ArrayList<>();
     HotelAdapter mAdapter;
+    int itemPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
         for (int i = 0; i < arJudul.length; i++) {
             mlist.add(new Hotel(arJudul[i], arDeskripsi[i], arDetail[i], arLokasi[i], arFoto[i]));
         }
+
         mAdapter.notifyDataSetChanged();
     }
 
@@ -107,6 +110,29 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
     }
 
     @Override
+    public void doEdit(int pos) {
+        itemPos = pos;
+        Intent intent = new Intent(this, InputActivity.class);
+        intent.putExtra(HOTEL, mlist.get(pos));
+        startActivityForResult(intent, REQUEST_CODE_EDIT);
+    }
+
+    @Override
+    public void doDelete(int pos) {
+
+    }
+
+    @Override
+    public void doFav(int pos) {
+
+    }
+
+    @Override
+    public void doShare(int pos) {
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK) {
@@ -114,6 +140,13 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
             mlist.add(hotel);
             //if (isFiltered) mListAll.add(hotel);
             //doFilter(mQuery);
+            mAdapter.notifyDataSetChanged();
+        } else if (requestCode == REQUEST_CODE_EDIT && requestCode == RESULT_OK) {
+            Hotel hotel = (Hotel) data.getSerializableExtra(HOTEL);
+            mlist.remove(itemPos);
+            //if (isFiltered) mListAll.remove(mListMapFilter.get(itemPos).intValue());
+            mlist.add(itemPos, hotel);
+            //if (isFiltered) mListAll.add(mListMapFilter.get(itemPos), hotel);
             mAdapter.notifyDataSetChanged();
         }
     }

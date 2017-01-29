@@ -38,12 +38,6 @@ public class InputActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.buttonSimpan).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doSave();
-            }
-        });
 
         hotel = (Hotel) getIntent().getSerializableExtra(MainActivity.HOTEL);
         if (hotel != null) {
@@ -53,16 +47,16 @@ public class InputActivity extends AppCompatActivity {
             setTitle("New Hotel ");
         }
 
+        findViewById(R.id.buttonSimpan).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                doSave();
+            }
+        });
+
+
     }
 
-    private void fillData() {
-        etJudul.setText(hotel.judul);
-        etDeskripsi.setText(hotel.deskripsi);
-        etDetail.setText(hotel.detail);
-        etLokasi.setText(hotel.lokasi);
-        uriFoto = Uri.parse(hotel.foto);
-        ivFoto.setImageURI(uriFoto);
-    }
 
     private void pickPhoto() {
         Intent intent;
@@ -131,6 +125,15 @@ public class InputActivity extends AppCompatActivity {
 
     private void setErrorEmpty(EditText editText) {
         editText.setError(((TextInputLayout) editText.getParent().getParent()).getHint() + " Belum Diisi ");
+    }
+
+    private void fillData() {
+        etJudul.setText(hotel.judul);
+        etDeskripsi.setText(hotel.deskripsi);
+        etDetail.setText(hotel.detail);
+        etLokasi.setText(hotel.lokasi);
+        uriFoto = Uri.parse(hotel.foto);
+        ivFoto.setImageURI(uriFoto);
     }
 }
 
