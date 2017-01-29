@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,7 +21,8 @@ import id.sch.smktelkom_mlg.learn.recyclerview3.model.Hotel;
 
 public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter {
 
-    private static final String HOTEL = "hotel";
+    public static final String HOTEL = "hotel";
+    private static final int REQUEST_CODE_ADD = 88;
     ArrayList<Hotel> mlist = new ArrayList<>();
     HotelAdapter mAdapter;
 
@@ -45,10 +45,13 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                goAdd();
             }
         });
+    }
+
+    private void goAdd() {
+        startActivityForResult(new Intent(this, InputActivity.class), REQUEST_CODE_ADD);
     }
 
     private void filldata() {
@@ -102,4 +105,17 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
         intent.putExtra(HOTEL, mlist.get(pos));
         startActivity(intent);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK) {
+            Hotel hotel = (Hotel) data.getSerializableExtra(HOTEL);
+            mlist.add(hotel);
+            //if (isFiltered) mListAll.add(hotel);
+            //doFilter(mQuery);
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
 }
