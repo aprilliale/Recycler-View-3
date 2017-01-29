@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -119,7 +120,19 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
 
     @Override
     public void doDelete(int pos) {
-
+        itemPos = pos;
+        final Hotel hotel = mlist.get(pos);
+        mlist.remove(itemPos);
+        mAdapter.notifyDataSetChanged();
+        Snackbar.make(findViewById(R.id.fab), hotel.judul + " Terhapus", Snackbar.LENGTH_LONG)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mlist.add(itemPos, hotel);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -138,15 +151,11 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
         if (requestCode == REQUEST_CODE_ADD && resultCode == RESULT_OK) {
             Hotel hotel = (Hotel) data.getSerializableExtra(HOTEL);
             mlist.add(hotel);
-            //if (isFiltered) mListAll.add(hotel);
-            //doFilter(mQuery);
             mAdapter.notifyDataSetChanged();
         } else if (requestCode == REQUEST_CODE_EDIT && requestCode == RESULT_OK) {
             Hotel hotel = (Hotel) data.getSerializableExtra(HOTEL);
             mlist.remove(itemPos);
-            //if (isFiltered) mListAll.remove(mListMapFilter.get(itemPos).intValue());
             mlist.add(itemPos, hotel);
-            //if (isFiltered) mListAll.add(mListMapFilter.get(itemPos), hotel);
             mAdapter.notifyDataSetChanged();
         }
     }
